@@ -1,3 +1,3 @@
 # CubeSatV1
 
-![tlogo_lr](https://github.com/edgeflyte/CubeSatV1/assets/153346925/72b64e33-04ea-4378-be52-08c55d925c13)
+![](<img src="https://edgeflyte.com/img/tlogo_lr.png" width="100px">)
