@@ -43,10 +43,8 @@ baseData bd;
 void setup() {
   Wire.begin();
   Serial.begin(9600);
-
-  digitalWrite(0, 0);
-  digitalWrite(1, 0);
-  
+  pinMode(1, INPUT);
+  UCSR0B &= ~_BV(TXEN0);
   
   bootLED();
   
@@ -177,7 +175,7 @@ void scani2c(){
 
 
 void txMainPkt(){
-  UCSR0B &= ~bit (TXEN0);
+  UCSR0B |= _BV(TXEN0);
   digitalWrite(LED, 1);
 
   char bu[150];
@@ -187,14 +185,17 @@ void txMainPkt(){
           (int)(bd.p1/10), (int)(bd.pa1),
           (int)bd.aqi, (int)bd.tvoc, (int)bd.eco2, (int)bd.co2);
   Serial.println(bu);
-  
-  UCSR0B |= ~bit (TXEN0);
+  delay(100);
+  UCSR0B &= ~bit (TXEN0);
+  // UCSR0B &= _BV(TXEN0);
+  // digitalWrite(1, 0);
+  // pinMode(1, INPUT);
   digitalWrite(LED, 0);
 }
 
 void txPM2Pkt(){
   digitalWrite(LED, 1);
-  UCSR0B &= ~bit (TXEN0);
+  UCSR0B |= _BV(TXEN0);
   char bu[150];
   //                  |PM 1.0 - 10.0     |NC 0.5 - 10.0           |TYP Part Size
   sprintf(bu, "$ASB,1,%05d,%05d,%05d,%05d,%06d,%06d,%06d,%06d,%06d,%03d,*",
@@ -204,8 +205,11 @@ void txPM2Pkt(){
           (int)(m.typical_particle_size * 100)
           );
   Serial.println(bu);
-  
-  UCSR0B |= ~bit (TXEN0);
+  delay(100);
+  // UCSR0B &= _BV(TXEN0);
+  UCSR0B &= ~bit (TXEN0);
+  // digitalWrite(1, 0);
+  // pinMode(1, INPUT);
   digitalWrite(LED, 0);
 }
 
