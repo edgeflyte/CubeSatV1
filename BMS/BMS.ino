@@ -58,7 +58,11 @@ float sol1, sol2;
 
 void setup() {
   initPins();
+  
   Serial.begin(9600);
+  pinMode(1, INPUT);
+  UCSR0B &= ~_BV(TXEN0);
+
   Serial.println("#BMS, Battery Management System Initializing...");
   sequenceLEDS();
 
@@ -77,17 +81,7 @@ double sensT, updateT = 0;
 
 void loop() {
   lights();
-//  Serial.print("*");
-//  Serial.print(sensT);
-//  Serial.print(",");
-//  Serial.print(updateT);
-//  Serial.print(",");
-//  Serial.print(millis());
-//  Serial.println("*");
   
-  
-  
-
   if(sensT + 2000 <= millis()){
     batV = getBatV();
     batPct = getBatPct();
@@ -101,8 +95,10 @@ void loop() {
   }
 
 
-  if(updateT + 1500 <= millis()){
+  if(updateT + 5000 <= millis()){
     digitalWrite(L1, 1);
+    UCSR0B |= _BV(TXEN0);
+    delay(100);
     char bu[20];
     Serial.print("$BMS,");
     Serial.print(err);
@@ -130,6 +126,8 @@ void loop() {
     
     digitalWrite(L1, 0);  
     updateT = millis();
+    delay(100);
+    UCSR0B &= ~bit (TXEN0);
   }
 
   
