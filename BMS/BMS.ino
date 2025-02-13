@@ -1,6 +1,6 @@
 // CubeSat v1 BMS Code Revision 1.0
 // =================================
-// ©Copyright 2023 EdgeFlyte, LLC.
+// ©Copyright 2025 EdgeFlyte, LLC.
 // All Rights Reserved. 
 
 
@@ -21,19 +21,18 @@
 
 // Batt Chem
 const int NUM_CELLS = 4;
-const float MIN_VOLTAGE_PER_CELL = 1.2;
+const float MIN_VOLTAGE_PER_CELL = 1.0;
 const float MAX_VOLTAGE_PER_CELL = 1.4;
 
-const float vsense_offset = -2.81;
-const float sp1_offset = -1.65;
-const float sp2_offset = -1.65;
+const float vsense_offset = 0;
+const float sp1_offset = 0;
+const float sp2_offset = 0;
 
 // Sys Variables
 bool activeonBoot_L1 = true;
 bool activeonBoot_L2 = true;
 bool activeonBoot_L3 = false;
 bool activeonBoot_L4 = true;
-
 
 bool active_LDO1 = false;
 bool active_LDO2 = false;
@@ -49,12 +48,9 @@ bool rememberStates = false;  // Write LDO States to EEPROM
 
 int err = 0;
 
-
 // System Sensor Variables
 float batV, batPct;
 float sol1, sol2;
-
-
 
 void setup() {
   initPins();
@@ -71,8 +67,6 @@ void setup() {
   if(activeonBoot_L3) setLDO(3, 1);
   if(activeonBoot_L4) setLDO(4, 1);
   
-
-  
   Serial.println("#BMS, Battery Management System Initialized.");
 }
 
@@ -87,9 +81,7 @@ void loop() {
     batPct = getBatPct();
     sol1 = getSol(1);
     sol2 = getSol(2);
-    
-    
-    if(batPct <= 20) err = 1;   // Do a small battery checking
+    if(batPct <= 20) err = 1;
     if(batPct <= 5)  err = 2;
     sensT = millis();
   }
@@ -185,37 +177,40 @@ void loop() {
 }
 
 float getBatV(){
+  analogReference(DEFAULT);
   int av = analogRead(VSENSE);
-//  Serial.println(av);
-  float iv = (av * 5.0) / 1024.0;
-  iv = iv / .5;
+  float iv = (av / 1023.0) * 3.3 * 2;
   iv = iv + vsense_offset;
   iv = (iv < 0.1) ? 0.0 : iv;
-//  Serial.print("V:");
-//  Serial.println(iv);
   return iv;
+}
+
+float mapFloat(float x, float in_min, float in_max, float out_min, float out_max) {
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
 float getBatPct(){
   float v = getBatV();
-  int bp = map(v, MIN_VOLTAGE_PER_CELL * NUM_CELLS, MAX_VOLTAGE_PER_CELL * NUM_CELLS, 0, 100);
-  bp = constrain(bp, 0, 100);
+  float bp = mapFloat(v, (MIN_VOLTAGE_PER_CELL * NUM_CELLS), (MAX_VOLTAGE_PER_CELL * NUM_CELLS), 0.0, 100.0);
+  if(bp < 3.0) bp = 0;
+  if(bp > 5.0) bp = 100; 
   return bp;
 }
-
 
 float getSol(int pan){
   float v;
   if(pan == 1){
+    analogReference(DEFAULT);
     int av = analogRead(SP1);
-    v = (av * 5.0) / 1024.0;
+    v = (av / 1023.0) * 3.3;
     v = v + sp1_offset;
     v = (v < 0.1) ? 0.0 : v;
     return v;
   }
   if(pan == 2){
+    analogReference(DEFAULT);
     int av = analogRead(SP2);
-    v = (av * 5.0) / 1024.0;
+    v = (av * 3.3) / 1024.0;
     v = v + sp2_offset;
     v = (v < 0.1) ? 0.0 : v;
     return v;
@@ -227,7 +222,6 @@ void initPins(){
   pinMode(L1, OUTPUT);
   pinMode(L2, OUTPUT);
   pinMode(L3, OUTPUT);
-  
   pinMode(LDO1, OUTPUT);
   pinMode(LDO2, OUTPUT);
   pinMode(LDO3, OUTPUT);
@@ -276,7 +270,7 @@ bool setLDO(int ch, bool state){
 }
 
 bool rst(){
-  // reset system somehow
+  // TODO: Reset System
   
 }
 
@@ -286,7 +280,7 @@ bool l1s, l2s, l3s; // States
 
 int lights(){
  
-  if(err){  // Error code active, determine which one it is and set l3...
+  if(err){
     
     if(err == 1){ // Low Battery Level
       if(l3t - 2000 >= millis()){
