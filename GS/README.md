@@ -23,6 +23,8 @@ Connect Arduino to target board's ATmega328P as follows:
 | 13 | SCK | SCK |
 | 5V | VCC | Power |
 | GND | GND | Ground |
+
+
 ![GSISP](https://github.com/user-attachments/assets/40611e57-28af-4d3e-8ae2-15cd4ff4b36f)
 
 ## Uploading Bootloader
