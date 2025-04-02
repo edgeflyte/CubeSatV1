@@ -21,7 +21,7 @@ Connect Arduino to target board's ATmega328P as follows:
 | 11 | MOSI | MOSI |
 | 12 | MISO | MISO |
 | 13 | SCK | SCK |
-| 5V | VCC | Power |
+| 3.3V | VCC | Power |
 | GND | GND | Ground |
 
 
