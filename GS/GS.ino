@@ -1,5 +1,17 @@
 // EdgeFlyte 1U CubeSat Ground Station v2
-// Copyright ©2025 EdgeFlyte. All rights reserved.
+// Copyright ©2025 EdgeFlyte.
+
+// This code is licensed for use in non-commercial applications only.  
+// Redistribution and modification are permitted for personal, educational,  
+// or research purposes, provided that proper credit is given.  
+
+// THIS SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND,  
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES  
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.  
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE  
+// FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION  
+// OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN  
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  
 
 
 #include <SPI.h>
