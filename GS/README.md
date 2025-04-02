@@ -1,4 +1,4 @@
-# Uploading Bootloader to ATmega328P
+# Uploading Bootloader to ATmega328PB
 
 ## Required Hardware
 - Arduino UNO (or similar) as ISP programmer
@@ -41,7 +41,7 @@ Connect Arduino to target board's ATmega328P as follows:
 4. Select `Arduino as ISP` from Tools > Programmer
 5. Click Tools > Burn Bootloader
 
-## Uploading Code
+# Uploading Code
 After bootloader is installed:
 
 1. Connect the Ground Station to the USB port of the Computer
