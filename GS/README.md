@@ -2,7 +2,7 @@
 
 ## Required Hardware
 - Arduino UNO (or similar) as ISP programmer
-- Target board with ATmega328P
+- Target board with ATmega328PB (CubeSat Ground Station
 - 6 jumper wires
 
 ## Setup Arduino as ISP
