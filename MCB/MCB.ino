@@ -102,7 +102,7 @@ sensorData sData;
 
 struct sysInfo {
   int xvCH = 11;
-  uint8_t address[6] = { "EFEFE" };
+  uint8_t address[6] = { "EFEF0" };
 
 
   int bms_err;
