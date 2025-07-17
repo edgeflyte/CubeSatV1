@@ -1,0 +1,29 @@
+{
+  "gs": {
+    "version": "1.2.1",
+    "releaseName": "Cascade",
+    "releaseDate": "2025-07-17",
+    "checksum": "abc123def456",
+    "description": ""
+  },
+  "bms": {
+    "version": "1.2.1",
+    "releaseName": "Cascade",
+    "releaseDate": "2025-07-15",
+    "checksum": "789xyz456uvw",
+    "description": ""
+  },
+  "mcb": {
+    "version": "1.2.1",
+    "releaseName": "Cascade",
+    "releaseDate": "2025-07-10",
+    "checksum": "321ghi654jkl",
+    "description": ""
+  },
+  "asb": {
+    "version": "1.2.1",
+    "releaseName": "Cascade",
+    "releaseDate": "2025-07-12",
+    "checksum": "567mno890pqr",
+    "description": ""
+  }
