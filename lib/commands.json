@@ -1,0 +1,577 @@
+{
+  "commands": [
+    {
+      "command": "CALIBRATE_IMU",
+      "parameters": [],
+      "description": "Initiates the calibration process for the Inertial Measurement Unit (IMU).",
+      "expected_performance": "IMU begins calibration sequence to correct sensor biases.",
+      "expected_response": "ACK if started, error code if failed.",
+      "library_reference": "imu_module.calibrate()"
+    },
+    {
+      "command": "RESET_IMU",
+      "parameters": [],
+      "description": "Resets the IMU hardware/software to initial state.",
+      "expected_performance": "Reinitializes IMU registers and state.",
+      "expected_response": "ACK if successful, NACK if IMU not responsive.",
+      "library_reference": "imu_module.reset()"
+    },
+    {
+      "command": "SOFT_REBOOT",
+      "parameters": [],
+      "description": "Performs a soft reboot of the onboard computer (MCU).",
+      "expected_performance": "Restarts microcontroller without power cycling.",
+      "expected_response": "Delayed ACK post reboot (or no response until system reboots).",
+      "library_reference": "system.reboot(soft=True)"
+    },
+    {
+      "command": "HARD_REBOOT",
+      "parameters": [],
+      "description": "Forces a full system reboot via power cycle.",
+      "expected_performance": "Complete system shutdown and restart.",
+      "expected_response": "System restart; prior to reboot may not respond.",
+      "library_reference": "system.reboot(soft=False)"
+    },
+    {
+      "command": "BMS_CH1_REBOOT",
+      "parameters": [],
+      "description": "Reboots power for BMS channel 1.",
+      "expected_performance": "Channel 1 rebooted.",
+      "expected_response": "ACK with status update.",
+      "library_reference": "bms.reboot_channel(1)"
+    },
+    {
+      "command": "BMS_CH1_OFF",
+      "parameters": [],
+      "description": "Turns off power for BMS channel 1.",
+      "expected_performance": "Channel 1 disabled.",
+      "expected_response": "ACK with status update.",
+      "library_reference": "bms.channel_off(1)"
+    },
+    {
+      "command": "BMS_CH1_ON",
+      "parameters": [],
+      "description": "Turns on power for BMS channel 1.",
+      "expected_performance": "Channel 1 enabled.",
+      "expected_response": "ACK with status update.",
+      "library_reference": "bms.channel_on(1)"
+    },
+    {
+      "command": "BMS_CH2_REBOOT",
+      "parameters": [],
+      "description": "Reboots power for BMS channel 2.",
+      "expected_performance": "Channel 2 rebooted.",
+      "expected_response": "ACK with status update.",
+      "library_reference": "bms.reboot_channel(2)"
+    },
+    {
+      "command": "BMS_CH2_OFF",
+      "parameters": [],
+      "description": "Turns off power for BMS channel 2.",
+      "expected_performance": "Channel 2 disabled.",
+      "expected_response": "ACK with status update.",
+      "library_reference": "bms.channel_off(2)"
+    },
+    {
+      "command": "BMS_CH2_ON",
+      "parameters": [],
+      "description": "Turns on power for BMS channel 2.",
+      "expected_performance": "Channel 2 enabled.",
+      "expected_response": "ACK with status update.",
+      "library_reference": "bms.channel_on(2)"
+    },
+    {
+      "command": "BMS_CH3_REBOOT",
+      "parameters": [],
+      "description": "Reboots power for BMS channel 3.",
+      "expected_performance": "Channel 3 rebooted.",
+      "expected_response": "ACK with status update.",
+      "library_reference": "bms.reboot_channel(3)"
+    },
+    {
+      "command": "BMS_CH3_OFF",
+      "parameters": [],
+      "description": "Turns off power for BMS channel 3.",
+      "expected_performance": "Channel 3 disabled.",
+      "expected_response": "ACK with status update.",
+      "library_reference": "bms.channel_off(3)"
+    },
+    {
+      "command": "BMS_CH3_ON",
+      "parameters": [],
+      "description": "Turns on power for BMS channel 3.",
+      "expected_performance": "Channel 3 enabled.",
+      "expected_response": "ACK with status update.",
+      "library_reference": "bms.channel_on(3)"
+    },
+    {
+      "command": "BMS_CH4_REBOOT",
+      "parameters": [],
+      "description": "Reboots power for BMS channel 4.",
+      "expected_performance": "Channel 4 rebooted.",
+      "expected_response": "ACK with status update.",
+      "library_reference": "bms.reboot_channel(4)"
+    },
+    {
+      "command": "BMS_CH4_OFF",
+      "parameters": [],
+      "description": "Turns off power for BMS channel 4.",
+      "expected_performance": "Channel 4 disabled.",
+      "expected_response": "ACK with status update.",
+      "library_reference": "bms.channel_off(4)"
+    },
+    {
+      "command": "BMS_CH4_ON",
+      "parameters": [],
+      "description": "Turns on power for BMS channel 4.",
+      "expected_performance": "Channel 4 enabled.",
+      "expected_response": "ACK with status update.",
+      "library_reference": "bms.channel_on(4)"
+    },
+    {
+      "command": "ASB_SOFT_REBOOT",
+      "parameters": [],
+      "description": "Performs a soft reboot of the Attitude Sensor Board (ASB).",
+      "expected_performance": "Reinitializes ASB firmware without full shutdown.",
+      "expected_response": "ACK or silent reboot confirmation.",
+      "library_reference": "asb.reboot()"
+    },
+    {
+      "command": "BMS_SOFT_REBOOT",
+      "parameters": [],
+      "description": "Performs a soft reboot of the Battery Management System (BMS).",
+      "expected_performance": "BMS resets without power cycling the system.",
+      "expected_response": "ACK or reboot confirmation.",
+      "library_reference": "bms.soft_reboot()"
+    },
+    {
+      "command": "MCB_GPIO_9_READ",
+      "parameters": [],
+      "description": "Reads GPIO pin 9.",
+      "expected_performance": "GPIO 9 state read.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.read(9)"
+    },
+    {
+      "command": "MCB_GPIO_9_SET_H",
+      "parameters": [],
+      "description": "Sets high GPIO pin 9.",
+      "expected_performance": "GPIO 9 state set high.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.set_h(9)"
+    },
+    {
+      "command": "MCB_GPIO_9_SET_L",
+      "parameters": [],
+      "description": "Sets low GPIO pin 9.",
+      "expected_performance": "GPIO 9 state set low.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.set_l(9)"
+    },
+    {
+      "command": "MCB_GPIO_9_DISAB",
+      "parameters": [],
+      "description": "Disables GPIO pin 9.",
+      "expected_performance": "GPIO 9 state disabled.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.disab(9)"
+    },
+    {
+      "command": "MCB_GPIO_10_READ",
+      "parameters": [],
+      "description": "Reads GPIO pin 10.",
+      "expected_performance": "GPIO 10 state read.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.read(10)"
+    },
+    {
+      "command": "MCB_GPIO_10_SET_H",
+      "parameters": [],
+      "description": "Sets high GPIO pin 10.",
+      "expected_performance": "GPIO 10 state set high.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.set_h(10)"
+    },
+    {
+      "command": "MCB_GPIO_10_SET_L",
+      "parameters": [],
+      "description": "Sets low GPIO pin 10.",
+      "expected_performance": "GPIO 10 state set low.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.set_l(10)"
+    },
+    {
+      "command": "MCB_GPIO_10_DISAB",
+      "parameters": [],
+      "description": "Disables GPIO pin 10.",
+      "expected_performance": "GPIO 10 state disabled.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.disab(10)"
+    },
+    {
+      "command": "MCB_GPIO_21_READ",
+      "parameters": [],
+      "description": "Reads GPIO pin 21.",
+      "expected_performance": "GPIO 21 state read.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.read(21)"
+    },
+    {
+      "command": "MCB_GPIO_21_SET_H",
+      "parameters": [],
+      "description": "Sets high GPIO pin 21.",
+      "expected_performance": "GPIO 21 state set high.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.set_h(21)"
+    },
+    {
+      "command": "MCB_GPIO_21_SET_L",
+      "parameters": [],
+      "description": "Sets low GPIO pin 21.",
+      "expected_performance": "GPIO 21 state set low.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.set_l(21)"
+    },
+    {
+      "command": "MCB_GPIO_21_DISAB",
+      "parameters": [],
+      "description": "Disables GPIO pin 21.",
+      "expected_performance": "GPIO 21 state disabled.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.disab(21)"
+    },
+    {
+      "command": "MCB_GPIO_22_READ",
+      "parameters": [],
+      "description": "Reads GPIO pin 22.",
+      "expected_performance": "GPIO 22 state read.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.read(22)"
+    },
+    {
+      "command": "MCB_GPIO_22_SET_H",
+      "parameters": [],
+      "description": "Sets high GPIO pin 22.",
+      "expected_performance": "GPIO 22 state set high.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.set_h(22)"
+    },
+    {
+      "command": "MCB_GPIO_22_SET_L",
+      "parameters": [],
+      "description": "Sets low GPIO pin 22.",
+      "expected_performance": "GPIO 22 state set low.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.set_l(22)"
+    },
+    {
+      "command": "MCB_GPIO_22_DISAB",
+      "parameters": [],
+      "description": "Disables GPIO pin 22.",
+      "expected_performance": "GPIO 22 state disabled.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.disab(22)"
+    },
+    {
+      "command": "MCB_GPIO_26_READ",
+      "parameters": [],
+      "description": "Reads GPIO pin 26.",
+      "expected_performance": "GPIO 26 state read.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.read(26)"
+    },
+    {
+      "command": "MCB_GPIO_26_SET_H",
+      "parameters": [],
+      "description": "Sets high GPIO pin 26.",
+      "expected_performance": "GPIO 26 state set high.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.set_h(26)"
+    },
+    {
+      "command": "MCB_GPIO_26_SET_L",
+      "parameters": [],
+      "description": "Sets low GPIO pin 26.",
+      "expected_performance": "GPIO 26 state set low.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.set_l(26)"
+    },
+    {
+      "command": "MCB_GPIO_26_DISAB",
+      "parameters": [],
+      "description": "Disables GPIO pin 26.",
+      "expected_performance": "GPIO 26 state disabled.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.disab(26)"
+    },
+    {
+      "command": "MCB_GPIO_27_READ",
+      "parameters": [],
+      "description": "Reads GPIO pin 27.",
+      "expected_performance": "GPIO 27 state read.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.read(27)"
+    },
+    {
+      "command": "MCB_GPIO_27_SET_H",
+      "parameters": [],
+      "description": "Sets high GPIO pin 27.",
+      "expected_performance": "GPIO 27 state set high.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.set_h(27)"
+    },
+    {
+      "command": "MCB_GPIO_27_SET_L",
+      "parameters": [],
+      "description": "Sets low GPIO pin 27.",
+      "expected_performance": "GPIO 27 state set low.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.set_l(27)"
+    },
+    {
+      "command": "MCB_GPIO_27_DISAB",
+      "parameters": [],
+      "description": "Disables GPIO pin 27.",
+      "expected_performance": "GPIO 27 state disabled.",
+      "expected_response": "ACK with value or status update.",
+      "library_reference": "gpio.disab(27)"
+    },
+    {
+      "command": "MCB_GPIO_9_PWM",
+      "parameters": [
+        {
+          "name": "duty_cycle",
+          "type": "number",
+          "range": "0-255",
+          "description": "PWM duty cycle (0 = always low, 255 = always high)."
+        }
+      ],
+      "description": "Sends a PWM signal to GPIO 9.",
+      "expected_performance": "GPIO 9 outputs a PWM waveform.",
+      "expected_response": "ACK with PWM status.",
+      "library_reference": "gpio.set_pwm(9, duty_cycle)"
+    },
+    {
+      "command": "MCB_GPIO_10_PWM",
+      "parameters": [
+        {
+          "name": "duty_cycle",
+          "type": "number",
+          "range": "0-255",
+          "description": "PWM duty cycle (0 = always low, 255 = always high)."
+        }
+      ],
+      "description": "Sends a PWM signal to GPIO 10.",
+      "expected_performance": "GPIO 10 outputs a PWM waveform.",
+      "expected_response": "ACK with PWM status.",
+      "library_reference": "gpio.set_pwm(10, duty_cycle)"
+    },
+    {
+      "command": "MCB_GPIO_21_PWM",
+      "parameters": [
+        {
+          "name": "duty_cycle",
+          "type": "number",
+          "range": "0-255",
+          "description": "PWM duty cycle (0 = always low, 255 = always high)."
+        }
+      ],
+      "description": "Sends a PWM signal to GPIO 21.",
+      "expected_performance": "GPIO 21 outputs a PWM waveform.",
+      "expected_response": "ACK with PWM status.",
+      "library_reference": "gpio.set_pwm(21, duty_cycle)"
+    },
+    {
+      "command": "MCB_GPIO_22_PWM",
+      "parameters": [
+        {
+          "name": "duty_cycle",
+          "type": "number",
+          "range": "0-255",
+          "description": "PWM duty cycle (0 = always low, 255 = always high)."
+        }
+      ],
+      "description": "Sends a PWM signal to GPIO 22.",
+      "expected_performance": "GPIO 22 outputs a PWM waveform.",
+      "expected_response": "ACK with PWM status.",
+      "library_reference": "gpio.set_pwm(22, duty_cycle)"
+    },
+    {
+      "command": "MCB_GPIO_26_PWM",
+      "parameters": [
+        {
+          "name": "duty_cycle",
+          "type": "number",
+          "range": "0-255",
+          "description": "PWM duty cycle (0 = always low, 255 = always high)."
+        }
+      ],
+      "description": "Sends a PWM signal to GPIO 26.",
+      "expected_performance": "GPIO 26 outputs a PWM waveform.",
+      "expected_response": "ACK with PWM status.",
+      "library_reference": "gpio.set_pwm(26, duty_cycle)"
+    },
+    {
+      "command": "MCB_GPIO_27_PWM",
+      "parameters": [
+        {
+          "name": "duty_cycle",
+          "type": "number",
+          "range": "0-255",
+          "description": "PWM duty cycle (0 = always low, 255 = always high)."
+        }
+      ],
+      "description": "Sends a PWM signal to GPIO 27.",
+      "expected_performance": "GPIO 27 outputs a PWM waveform.",
+      "expected_response": "ACK with PWM status.",
+      "library_reference": "gpio.set_pwm(27, duty_cycle)"
+    },
+    {
+      "command": "MCB_I2C_SCAN",
+      "parameters": [],
+      "description": "Scans I2C bus for connected devices.",
+      "expected_performance": "Returns I2C addresses of detected peripherals.",
+      "expected_response": "List of I2C addresses.",
+      "library_reference": "i2c.scan()"
+    },
+    {
+      "command": "MCB_SD_SCAN",
+      "parameters": [],
+      "description": "Scans SD card filesystem for logs or data files.",
+      "expected_performance": "Returns file list on SD card root.",
+      "expected_response": "ACK with filenames.",
+      "library_reference": "sd_card.scan()"
+    },
+    {
+      "command": "MGPS_CMD",
+      "parameters": [
+        {
+          "name": "command",
+          "type": "text",
+          "range": "Any GPS-compatible ASCII command",
+          "description": "Command string to send to the GPS module. Usually a proprietary or NMEA sentence."
+        }
+      ],
+      "description": "Sends command to onboard GPS module.",
+      "expected_performance": "Executes GPS-specific command (e.g. reset, config).",
+      "expected_response": "ACK or GPS NMEA/message response.",
+      "library_reference": "gps.send_command()"
+    },
+    {
+      "command": "MCB_REQ_LOG",
+      "parameters": [
+        {
+          "name": "FROM",
+          "type": "number",
+          "range": "Unix timestamp",
+          "description": "Start time of the log to retrieve."
+        },
+        {
+          "name": "TO",
+          "type": "number",
+          "range": "Unix timestamp",
+          "description": "End time of the log to retrieve."
+        }
+      ],
+      "description": "Requests a log file segment from time FROM to TO.",
+      "expected_performance": "Returns telemetry or event log between timestamps.",
+      "expected_response": "Log data or error if range invalid.",
+      "library_reference": "log_manager.fetch()"
+    },
+    {
+      "command": "SYS_SLEEP",
+      "parameters": [
+        {
+          "name": "LEVEL",
+          "type": "number",
+          "range": "0-3",
+          "description": "Sleep level (0 = light sleep, 3 = deep hibernate)."
+        },
+        {
+          "name": "DURATIONMS",
+          "type": "number",
+          "range": "0-3600000",
+          "description": "Duration of sleep in milliseconds. 0 means until external wake."
+        }
+      ],
+      "description": "Puts the system in low-power sleep mode.",
+      "expected_performance": "System enters sleep mode for specified duration.",
+      "expected_response": "ACK before sleep; resumes after time lapse.",
+      "library_reference": "power.sleep()"
+    },
+    {
+      "command": "SYS_HIBERNATE",
+      "parameters": [
+        {
+          "name": "LEVEL",
+          "type": "number",
+          "range": "0-3",
+          "description": "Hibernate level (deepest shutdown mode = 3)."
+        },
+        {
+          "name": "DURATIONMS",
+          "type": "number",
+          "range": "0-3600000",
+          "description": "Duration of hibernation in milliseconds."
+        }
+      ],
+      "description": "Puts the system into a deep hibernation mode.",
+      "expected_performance": "Reduces system power to minimum for specified time.",
+      "expected_response": "No response during hibernation; resumes after duration.",
+      "library_reference": "power.hibernate()"
+    },
+    {
+      "command": "TELEM_SLP",
+      "parameters": [
+        {
+          "name": "LEVEL",
+          "type": "number",
+          "range": "0-5",
+          "description": "Sleep level for telemetry modules."
+        },
+        {
+          "name": "DURATIONMS",
+          "type": "number",
+          "range": "0-3600000",
+          "description": "How long telemetry will be disabled (ms)."
+        }
+      ],
+      "description": "Temporarily disables telemetry transmission.",
+      "expected_performance": "Pauses data transmission to ground station.",
+      "expected_response": "ACK; telemetry resumes after duration.",
+      "library_reference": "telemetry.pause()"
+    },
+    {
+      "command": "SOUND_ON",
+      "parameters": [],
+      "description": "Enables onboard buzzer/sound system.",
+      "expected_performance": "Tone or sound is activated.",
+      "expected_response": "ACK or audible feedback.",
+      "library_reference": "buzzer.enable()"
+    },
+    {
+      "command": "SOUND_OFF",
+      "parameters": [],
+      "description": "Disables onboard buzzer/sound system.",
+      "expected_performance": "Silences tone output.",
+      "expected_response": "ACK or silent confirmation.",
+      "library_reference": "buzzer.disable()"
+    },
+    {
+      "command": "LOCATE_TONE_ON",
+      "parameters": [],
+      "description": "Turns on audible locate tone to help find the CubeSat.",
+      "expected_performance": "Pulsed tone is emitted.",
+      "expected_response": "ACK or audible confirmation.",
+      "library_reference": "beacon.locate_on()"
+    },
+    {
+      "command": "LOCATE_TONE_OFF",
+      "parameters": [],
+      "description": "Turns off locate tone used during ground finding.",
+      "expected_performance": "Sound beacon is turned off.",
+      "expected_response": "ACK.",
+      "library_reference": "beacon.locate_off()"
+    }
+  ]
+}
