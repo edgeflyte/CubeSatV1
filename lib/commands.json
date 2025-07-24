@@ -9,6 +9,14 @@
       "library_reference": "imu_module.calibrate()"
     },
     {
+      "command": "TEST_PING",
+      "parameters": [],
+      "description": "Testing",
+      "expected_performance": "IMU begins calibration sequence to correct sensor biases.",
+      "expected_response": "ACK if started, error code if failed.",
+      "library_reference": "imu_module.calibrate()"
+    },
+    {
       "command": "RESET_IMU",
       "parameters": [],
       "description": "Resets the IMU hardware/software to initial state.",
