@@ -776,7 +776,7 @@ void tx_packet(){
           csID, sData.t1, sData.t2, sData.rh);
   report = radio.write(&packet, PACKET_SIZE);
   (report) ? flashGreen() : flashRed();
-  if (teletryOverSerial) Serial.println(packet);
+  if (telemetryOverSerial) Serial.println(packet);
 
 
   // BMS Main Packet
@@ -784,14 +784,14 @@ void tx_packet(){
           csID, sys.bms_ch1, sys.bms_ch2, sys.bms_ch3, sys.bms_ch4, sys.batV, sys.batPct);
   report = radio.write(&packet, PACKET_SIZE);
   (report) ? flashGreen() : flashRed();
-  if (teletryOverSerial) Serial.println(packet);
+  if (telemetryOverSerial) Serial.println(packet);
   
   // BMS Aux Packet
   sprintf(packet,"#H,%02X,%2.1f,%2.1f,%d,*",
           csID, sys.sol1V, sys.sol2V, sys.bms_err);
   report = radio.write(&packet, PACKET_SIZE);
   (report) ? flashGreen() : flashRed();
-  if (teletryOverSerial) Serial.println(packet);
+  if (telemetryOverSerial) Serial.println(packet);
   
 }
 
@@ -803,27 +803,27 @@ void txOrientationPkt(){
           csID, sData.ax, sData.ay, sData.az);
   report = radio.write(&packet, PACKET_SIZE);
   (report) ? flashGreen() : flashRed();
-  if (teletryOverSerial) Serial.println(packet);
+  if (telemetryOverSerial) Serial.println(packet);
   
   // GRYO Main Packet
   sprintf(packet,"#E,%02X,%03.2f,%03.2f,%03.2f,*",
           csID, sData.gx, sData.gy, sData.gz);
   report = radio.write(&packet, PACKET_SIZE);
   (report) ? flashGreen() : flashRed();
-  if (teletryOverSerial) Serial.println(packet);
+  if (telemetryOverSerial) Serial.println(packet);
 
   // MAG Main Packet
   sprintf(packet,"#F,%02X,%03.2f,%03.2f,%03.2f,*",
           csID, sData.mx, sData.my, sData.mz);
   report = radio.write(&packet, PACKET_SIZE);
   (report) ? flashGreen() : flashRed();
-  if (teletryOverSerial) Serial.println(packet);
+  if (telemetryOverSerial) Serial.println(packet);
 
   sprintf(packet,"#I,%02X,%03.2f,%03.2f,%03.2f,%03.2f,*",
           csID, filter.getQuatW(), filter.getQuatX(), filter.getQuatY(), filter.getQuatZ());
   report = radio.write(&packet, PACKET_SIZE);
   (report) ? flashGreen() : flashRed();
-  if (teletryOverSerial) Serial.println(packet);
+  if (telemetryOverSerial) Serial.println(packet);
 
   
 }
@@ -835,36 +835,37 @@ void txASBPacket(){
         csID, ad.t1, ad.t2, ad.rh, ad.p1);
   int report = radio.write(&packet, PACKET_SIZE);
   (report) ? flashGreen() : flashRed();
-  if (teletryOverSerial) Serial.println(packet);
+  if (telemetryOverSerial) Serial.println(packet);
 
   sprintf(packet,"#K,%02X,%05.0f,%1d,%06d,%05d,*",
         csID, ad.pa1, ad.aqi, ad.tvoc, ad.eco2);
   report = radio.write(&packet, PACKET_SIZE);
   (report) ? flashGreen() : flashRed();
-  if (teletryOverSerial) Serial.println(packet);
+  if (telemetryOverSerial) Serial.println(packet);
 
   sprintf(packet,"#L,%02X,%05d,%02.2f,*",
         csID, ad.co2, ad.typ);
   report = radio.write(&packet, PACKET_SIZE);
   (report) ? flashGreen() : flashRed();
-  if (teletryOverSerial) Serial.println(packet);
+  if (telemetryOverSerial) Serial.println(packet);
 
   sprintf(packet,"#M,%02X,%04.1f,%04.1f,%04.1f,*",
         csID, ad.pm10, ad.pm25, ad.pm40);
   report = radio.write(&packet, PACKET_SIZE);
   (report) ? flashGreen() : flashRed();
-  if (teletryOverSerial) Serial.println(packet);
+  if (telemetryOverSerial) Serial.println(packet);
 
   sprintf(packet,"#N,%02X,%04.1f,%05.1f,%05.1f,*",
         csID, ad.pm100, ad.nc05, ad.nc10);
   report = radio.write(&packet, PACKET_SIZE);
   (report) ? flashGreen() : flashRed();
-  if (teletryOverSerial) Serial.println(packet);
+  if (telemetryOverSerial) Serial.println(packet);
 
   sprintf(packet,"#O,%02X,%05.1f,%05.1f,%05.1f,*",
         csID, ad.nc25, ad.nc40, ad.nc100);
   report = radio.write(&packet, PACKET_SIZE);
   (report) ? flashGreen() : flashRed();
-  if (teletryOverSerial) Serial.println(packet);
+  if (telemetryOverSerial) Serial.println(packet);
 
 }
+
