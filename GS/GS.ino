@@ -22,8 +22,8 @@
 #define CSN_PIN 8
 RF24 radio(CE_PIN, CSN_PIN);
 
-uint16_t runtimeSerialNumber __attribute__((section(".noinit")));
-uint16_t EEMEM serialNumber;
+uint8_t runtimeSerialNumber __attribute__((section(".noinit")));
+uint8_t EEMEM serialNumber;
 
 uint64_t rxPackets = 0;
 uint64_t txPackets = 0;
@@ -153,15 +153,11 @@ void parseSerial(){
 
 
 
-void saveSerialNumber(uint16_t number){
+void saveSerialNumber(uint8_t number){
   eeprom_update_byte(&serialNumber, number);
   runtimeSerialNumber = number;
 }
 
- 
-void setRadioAddress((uint8_t)* addr){
-  // In Process
-}
 
 
 void transmitPacket(){
@@ -179,3 +175,4 @@ void transmitPacket(){
     Serial.println(F("Transmission failed or timed out"));  // payload was not delivered
   }
 }
+
