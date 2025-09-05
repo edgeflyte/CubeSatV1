@@ -103,7 +103,7 @@ void parseSerial(){
         Serial.print("%%01,");
         Serial.print(runtimeSerialNumber);
         Serial.print(',');
-        Serial.print('');
+        Serial.print(' ');
         return;
       }
 
@@ -175,4 +175,5 @@ void transmitPacket(){
     Serial.println(F("Transmission failed or timed out"));  // payload was not delivered
   }
 }
+
 
