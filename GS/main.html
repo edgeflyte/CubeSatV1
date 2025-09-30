@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>CubeSat Ground Terminal v1 | EdgeFlyte</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <script src="./js/charts.js"></script>
+    <style>
+        div.smoothie-chart-tooltip {
+            background: #444;
+            padding: 1em;
+            margin-top: 20px;
+            font-family: consolas;
+            color: white;
+            font-size: 10px;
+            pointer-events: none;
+        }
+        .top {
+            -webkit-app-region: drag;
+            height: 32px;
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            z-index: 999999;
+            background-color: #213f98;
+        }
+        .smicon{
+            font-size: small;
+            padding-left: 1em;
+            padding-right: 1em;
+            text-transform: capitalize;
+            border-radius: 5px;
+            color: #fff;
+            background-color: #f00;
+            margin: 5px;
+        }
+
+
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            margin-top: 32px;
+            background: #213f98;
+
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            margin-top: 32px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .mapboxgl-canvas-container {
+            height: 75vh;
+        }
+        .progress-bar-battery {
+            background-color: #00c200;
+        }
+
+
+        c1{
+            display: inline-block;
+            color: #00c200;
+        }
+    </style>
+
+
+    <script src="./js/bootstrap.bundle.min.js"></script>
+</head>
+<body style="overflow-x: hidden;">
+    <div class="top">
+        <div class="d-flex align-items-center align-content-center " style="width: 100%; height: 100%;">
+            <p class="px-2 m-0" id="tb" style="color: #fff; font-size: small;">
+                <strong>
+                    CubeSat GTerminal <small>V1</small> | EF
+                </strong>
+            </p>
+        </div>
+    </div>
+    <div class="container-fluid" style="background-color: #213f98; color: #fff;">
+        <div class="row py-2">
+            <div class="col-6" style="border-right: solid 2px #fff;">
+                <div class="d-flex d-inline align-items-center">
+                    <img src="./img/efLogo.jpg" height="60px" alt="" style="border-radius: 5px;" class="mx-2">
+                    <h3>CubeSat GTerminal <small>V1</small></h3>
+                </div>
+            </div>
+            <div class="col-4">
+                <select class="form-select" aria-label="selectCubeSat" id="selectCubeSat">
+                    <option selected>None Detected...</option>
+                </select>
+                <div class="d-flex d-inline">
+                    <div class="smicon" id="status_socket">
+                        SOCKET
+                    </div>
+                    <div class="smicon" id="status_station">
+                        STATION
+                    </div>
+                    <div class="smicon" id="status_payload">
+                        PAYLOAD
+                    </div>
+                    <div class="smicon" style="background-color: #555;"  data-bs-toggle="modal" data-bs-target="#connectgs">
+                        CONNECT
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container-fluid py-3" style="background-color: #111; color: #FFF;">
+        <div class="row">
+            <div class="col-6">
+                <div id="orientationDisp" class="m-1" >
+                    
+                </div>
+            </div>
+            <div class="col-3" style="line-height: 110%;">
+                <strong>
+                    <small>POSITION</small>
+                </strong>
+                <p style="text-align: right; font-size: large;" id="cs_pos">000.000000,000.000000</p>
+                <hr>
+                <strong>
+                    <small>ALTITUDE (M)</small>
+                </strong>
+                <p style="text-align: right; font-size: large;" id="cs_alt">00,000.00</p>
+                <hr>
+                <strong>
+                    <small>SPEED (Knots)</small>
+                </strong>
+                <p style="text-align: right; font-size: large;" id="cs_spd">000.0</p>
+                <hr>
+                <strong>
+                    <small>HEADING (°)</small>
+                </strong>
+                <p style="text-align: right; font-size: large;" id="cs_hdg">000.0</p>
+                <hr>
+                <strong>
+                    <small>SATELLITES</small>
+                </strong>
+                <p style="text-align: right; font-size: large;" id="cs_sats">00</p>
+                <hr>
+                <strong>
+                    <small>MCB TEMP. (°C)</small>
+                </strong>
+                <p style="text-align: right; font-size: large;" id="cs_mcbTemp">000.0</p>
+            </div>
+            <div class="col-3">
+                <strong>
+                    <small>ATM. TEMP. PRIMARY (°C)</small>
+                </strong>
+                <p style="text-align: right; font-size: large;" id="cs_temp1">000.00</p>
+                <hr>
+
+                <strong>
+                    <small>ATM. PRESSURE (mBar)</small>
+                </strong>
+                <p style="text-align: right; font-size: large;" id="cs_press1">0,000.0</p>
+                <hr>
+                <strong>
+                    <small>ATM. RELATIVE HUM. (%)</small>
+                </strong>
+                <p style="text-align: right; font-size: large;" id="cs_rh1">00.0</p>
+                <hr>
+                <strong><small>ASB PRESS. ALT. (m)</small></strong>
+                <p style="text-align: right; font-size: large;" id="cs_asb_pa1">00.0</p>
+                <hr>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid py-3" style="background-color: #111; color: #FFF;">
+
+        <div class="row">
+            <div class="col-6">
+                <button class="btn btn-primary mb-3 px-5 mx-2" type="button" data-bs-target="#recent_caro"
+                    data-bs-slide="prev">
+                    <
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="btn btn-primary mb-3 px-5 mx-2" type="button" data-bs-target="#recent_caro"
+                    data-bs-slide="next">
+                    >
+                    <i class="fa fa-arrow-right"></i>
+                </button>
+            </div>
+            <div class="col-6">
+            </div>
+            <div class="col-12" style="min-height: 80vh">
+                <div id="recent_caro" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active" style="min-height: 75vh">
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="d-flex d-inline justify-content-between" style="height: 25px">
+                                        <p>Accel. X</p>
+                                        <span id="cs_ax">00.0</span>
+                                    </div>
+                                    <canvas id="g1" style="width: 100%; height: 140px;"></canvas>
+                            
+                                </div>
+                                <div class="col-4">
+                                    <div class="d-flex d-inline justify-content-between" style="height: 25px">
+                                        <p>Accel. Y</p>
+                                        <span id="cs_ay">00.0</span>
+                                    </div>
+                                    <canvas id="g2" style="width: 100%; height: 140px;"></canvas>
+                            
+                                </div>
+                                <div class="col-4">
+                                    <div class="d-flex d-inline justify-content-between" style="height: 25px">
+                                        <p>Accel. Z</p>
+                                        <span id="cs_az">00.0</span>
+                                    </div>
+                                    <canvas id="g3" style="width: 100%; height: 140px;"></canvas>
+                            
+                                </div>
+
+                                <div class="col-4">
+                                    <div class="d-flex d-inline justify-content-between" style="height: 25px">
+                                        <p>Gyro. X</p>
+                                        <span id="cs_gx">00.0</span>
+                                    </div>
+                                    <canvas id="g4" style="width: 100%; height: 140px;"></canvas>
+                            
+                                </div>
+
+                                <div class="col-4">
+                                    <div class="d-flex d-inline justify-content-between" style="height: 25px">
+                                        <p>Gyro. Y</p>
+                                        <span id="cs_gy">00.0</span>
+                                    </div>
+                                    <canvas id="g5" style="width: 100%; height: 140px;"></canvas>
+                                
+                                </div>
+                                <div class="col-4">
+                                    <div class="d-flex d-inline justify-content-between" style="height: 25px">
+                                        <p>Gyro. Z</p>
+                                        <span id="cs_gz">00.0</span>
+                                    </div>
+                                    <canvas id="g6" style="width: 100%; height: 140px;"></canvas>
+                                
+                                </div>
+                                <div class="col-4">
+                                    <div class="d-flex d-inline justify-content-between" style="height: 25px">
+                                        <p>Mag. X</p>
+                                        <span id="cs_mx">00.0</span>
+                                    </div>
+                                    <canvas id="g7" style="width: 100%; height: 140px;"></canvas>
+                                
+                                </div>
+                                <div class="col-4">
+                                    <div class="d-flex d-inline justify-content-between" style="height: 25px">
+                                        <p>Mag. Y</p>
+                                        <span id="cs_my">00.0</span>
+                                    </div>
+                                    <canvas id="g8" style="width: 100%; height: 140px;"></canvas>
+                                
+                                </div>
+                                <div class="col-4">
+                                    <div class="d-flex d-inline justify-content-between" style="height: 25px">
+                                        <p>Mag. Z</p>
+                                        <span id="cs_mz">00.0</span>
+                                    </div>
+                                    <canvas id="g9" style="width: 100%; height: 140px;"></canvas>
+                                
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="row"  style="min-height: 75vh">
+                                <div class="col-6">
+                                    <div id="gMap" style="height: 100%; width: 100%"></div>                       
+                                </div>
+                                <div class="col-6">
+                                    <div id="rawPackets" style="max-height: 75vh; height: 75vh; overflow: scroll;"></div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="row"  style="min-height: 75vh;">
+                                <div class="col-3">
+                                    <h5>Particulate Matter</h5>
+                                    <canvas id="pm2Chart" style="height: 90vh; width: 100%;"></canvas>
+                                </div>
+                                <div class="col-3">
+                                    <!-- <small><strong>ASB TEMP. 1 (°C)</strong></small>
+                                    <p style="text-align: right; font-size: large;" id="cs_asb_t1">00.0</p>
+                                    <hr> -->
+                                    <small><strong>ASB TEMP. 2 (°C)</strong></small>
+                                    <p style="text-align: right; font-size: large;" id="cs_asb_t2">00.0</p>
+                                    <hr>
+                                    <small><strong>ASB RELATIVE HUMIDITY (%)</strong></small>
+                                    <p style="text-align: right; font-size: large;" id="cs_asb_rh">00.0</p>
+                                    <hr>
+                                    <!-- <small><strong>ASB ATM. PRESSURE (MBAR)</strong></small>
+                                    <p style="text-align: right; font-size: large;" id="cs_asb_p1">00.0</p>
+                                    <hr> -->
+                                    <small><strong>ASB Air Quality Index</strong></small>
+                                    <p style="text-align: right; font-size: large;" id="cs_asb_aqi">0</p>
+                                    <hr>
+                                    <small><strong>ASB TVOC (PPB)</strong></small>
+                                    <p style="text-align: right; font-size: large;" id="cs_asb_tvoc">0</p>
+                                    <hr>
+                                    <small><strong>ASB ECO2 (PPM)</strong></small>
+                                    <p style="text-align: right; font-size: large;" id="cs_asb_eco2">0</p>
+                                    <hr>
+                                    <small><strong>ASB CO2 (PPM)</strong></small>
+                                    <p style="text-align: right; font-size: large;" id="cs_asb_co2">0</p>
+                                    <hr>
+                        
+                                </div>
+                                <div class="col-3">
+
+                                    <small><strong>BATTERY PERCENTAGE</strong></small>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-battery" role="progressbar" aria-valuenow="0"
+                                            aria-valuemin="0" aria-valuemax="100" id="cs_bat_p">
+                                            0%
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <small><strong>BATTERY VOLTAGE (V)</strong></small>
+                                    <p style="text-align: right; font-size: large;" id="cs_bat_v">00.0</p>
+                                    <hr>
+
+                                    <small><strong>SOLAR CELL 1 (mV)</strong></small><br>
+                                    <p class="w-100" style="text-align: right !important;">
+                                        <strong id="cs_scv1_v_num">00.00</strong>
+                                    </p>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-battery" role="progressbar" aria-valuenow="0"
+                                            aria-valuemin="0" aria-valuemax="3500" id="cs_sc1_v">
+                                            0
+                                        </div>
+                                    </div>
+
+                                    
+                                    <small><strong>SOLAR CELL 2 (mV)</strong></small>
+                                    <p class="w-100" style="text-align: right !important;">
+                                        <strong id="cs_scv2_v_num">00.00</strong>
+                                    </p>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-battery" role="progressbar" aria-valuenow="0"
+                                            aria-valuemin="0" aria-valuemax="3500" id="cs_sc2_v">
+                                            0
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <button type="button" class="btn btn-outline-danger" id="bms_ch1">CH1</button>
+                                        <button type="button" class="btn btn-outline-danger" id="bms_ch2">CH2</button>
+                                        <button type="button" class="btn btn-outline-danger" id="bms_ch3">CH3</button>
+                                        <button type="button" class="btn btn-outline-danger" id="bms_ch4">CH4</button>
+                                    </div>
+
+                                
+                                </div>
+                                <div class="col-3">
+                                    Sys States
+
+                                    <div class="d-flex justify-content-between align-items-center my-2">
+                                        <h5>RBF TAG</h5>
+                                        <button type="button" class="btn btn-outline-danger">DISCONNECTED</button>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center my-2">
+                                        <h5>SD CARD</h5>
+                                        <button type="button" class="btn btn-outline-danger">INACTIVE</button>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center my-2">
+                                        <h5>STEALTH</h5>
+                                        <button type="button" class="btn btn-outline-danger">OFF</button>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+
+
+
+
+    <div class="modal fade" id="connectgs" tabindex="-1" aria-labelledby="cgs" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="cgs">I/O Connect and Configure</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5>Ground Station</h5>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="list-group" id="comList">
+                                <button type="button" class="list-group-item list-group-item-action">COM?</button>
+
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <button type="button" class="btn btn-outline-info" id="scanGS"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" style="fill: #333"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M105.1 202.6c7.7-21.8 20.2-42.3 37.8-59.8c62.5-62.5 163.8-62.5 226.3 0L386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H463.5c0 0 0 0 0 0h.4c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5zM39 289.3c-5 1.5-9.8 4.2-13.7 8.2c-4 4-6.7 8.8-8.1 14c-.3 1.2-.6 2.5-.8 3.8c-.3 1.7-.4 3.4-.4 5.1V448c0 17.7 14.3 32 32 32s32-14.3 32-32V396.9l17.6 17.5 0 0c87.5 87.4 229.3 87.4 316.7 0c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.5 62.5-163.8 62.5-226.3 0l-.1-.1L125.6 352H176c17.7 0 32-14.3 32-32s-14.3-32-32-32H48.4c-1.6 0-3.2 .1-4.8 .3s-3.1 .5-4.6 1z"/></svg></button>
+                            <button type="button" class="btn btn-outline-success" id="cGS">CONNECT</button>
+                            <hr>
+                            <p>STATUS: <strong id="gs_status_ui">DISCONNECTED</strong></p>
+
+
+                        </div>
+                    </div>
+                    <hr>
+                    
+                    <h5 hidden>CubeSat</h5>
+                    <select hidden class="form-select" id="csConnectMethod">
+                        <option selected>Select Method</option>
+                        <option value="usb">USB</option>
+                        <option value="ble">Bluetooth LE</option>
+                    </select>
+                    <div hidden class="row mt-3">
+                        <div class="col-6">
+
+
+                            <div class="list-group" id="cscomList">
+                                
+                                <button type="button" class="list-group-item list-group-item-action">COM?</button>
+                                
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <button type="button" class="btn btn-outline-info" id="scanCS"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" style="fill: #333"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M105.1 202.6c7.7-21.8 20.2-42.3 37.8-59.8c62.5-62.5 163.8-62.5 226.3 0L386.3 160H336c-17.7 0-32 14.3-32 32s14.3 32 32 32H463.5c0 0 0 0 0 0h.4c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5zM39 289.3c-5 1.5-9.8 4.2-13.7 8.2c-4 4-6.7 8.8-8.1 14c-.3 1.2-.6 2.5-.8 3.8c-.3 1.7-.4 3.4-.4 5.1V448c0 17.7 14.3 32 32 32s32-14.3 32-32V396.9l17.6 17.5 0 0c87.5 87.4 229.3 87.4 316.7 0c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.5 62.5-163.8 62.5-226.3 0l-.1-.1L125.6 352H176c17.7 0 32-14.3 32-32s-14.3-32-32-32H48.4c-1.6 0-3.2 .1-4.8 .3s-3.1 .5-4.6 1z"/></svg></button>
+                            <button type="button" class="btn btn-outline-success" id="cCS">CONNECT</button>
+                            <hr>
+                            <p>STATUS: <strong>DISCONNECTED</strong></p>
+                    
+                    
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    </div>
+
+
+    <script>
+        var o = {
+            yaw: 0,
+            pitch: 0,
+            roll: 0
+        }
+    </script>
+    <script type="importmap">
+        {
+        "imports": {
+            "three": "./js/three.module.js",
+            "three/addons/": "https://unpkg.com/three@v0.158.0/examples/jsm/"
+        }
+        }
+    </script>
+    <script src="./renderer.js"></script>
+    <script src="./js/socket.io.js"></script>
+    <script src="./js/jq.js"></script>
+    <script type="module" src="./js/orientation.js"></script>
+    <script src="./js/smoothie.js"></script>
+
+
+    <script>
+        let map;
+
+        let csMarker 
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("gMap"), {
+                zoom: 15,
+                center: {lat: 40, lng: -100},
+                gestureHandling: 'greedy',
+                disableDefaultUI: true,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+            csMarker = new google.maps.Marker({
+                position: {lat: 0.1, lng: 0.1},
+                map,
+                title: "",
+            });
+        }
+
+
+        
+
+        var gsPort = "";
+        var csPort = "";
+        var sys = {};
+
+
+        var socket = io("http://127.0.0.1:45460");
+
+
+        socket.on("connect", ()=>{
+            console.log("connected");
+            document.getElementById("status_socket").style.backgroundColor = "#1e8e3e";
+        });
+        socket.on("reconnect", () => {
+            console.log("reconnecting");
+            document.getElementById("status_socket").style.backgroundColor = "#f7df1e";
+        });
+        
+        socket.on("disconnect", ()=>{
+            console.log("disconnected");
+            document.getElementById("status_socket").style.backgroundColor = "#F00";
+        })
+
+
+
+
+        $("#scanGS").on("click", ()=>{
+            socket.emit("pollGSCom", "");
+        })
+        
+        
+        
+        socket.on("gsCom", (ports)=>{
+            console.log(ports);
+            var cl =  document.getElementById("comList")
+            cl.innerHTML = "";
+
+
+            if(ports.length == 0){
+                cl.innerHTML += `<button type="button" class="list-group-item list-group-item-action">No COM</button>`;
+                return;
+            }
+    
+            ports.forEach(e => {
+                cl.innerHTML += `<button type="button" class="list-group-item list-group-item-action" onclick="sGS('${e.path}');" id="gsport_${e.path}">${e.friendlyName}</button>`;
+            });
+        });
+
+        socket.on("csCom", (ports) => {
+                console.log(ports);
+                var cl = document.getElementById("cscomList")
+                cl.innerHTML = "";
+
+
+                if (ports.length == 0) {
+                    cl.innerHTML += `<button type="button" class="list-group-item list-group-item-action">No COM</button>`;
+                    return;
+                }
+
+                ports.forEach(e => {
+                    cl.innerHTML += `<button type="button" class="list-group-item list-group-item-action" onclick="sCS(${e})" id="csport_${e}">${e}</button>`;
+                });
+            });
+        
+
+
+
+        function sGS(port){
+            gsPort = port;
+            $('[id^="gsport_"]').removeClass('active');
+            $(`#gsport_${port}`).addClass('active');
+            gsPort = port;
+        }
+
+        function sCS(port) {
+            csPort = port;
+            $('[class^="csport_"]').removeClass('active');
+            $(`#csport_${port}`).addClass('active');
+            csPort = port;
+        }
+
+
+
+
+        $("#cGS").on("click", ()=>{
+            if(sys.gsConnected){
+                // Disconnect with gs
+                console.log("Connecting to GS");
+                socket.emit("comDC", "gs");
+            } else {
+                console.log("Connecting to GS");
+                socket.emit("comGS_CN", gsPort);
+            }
+        });
+
+        $("#cCS").on("click", () => {
+            if (sys.csConnected) {
+                // Disconnect with gs
+                socket.emit("comDC", "cs");
+            } else {
+                socket.emit("comCS_CN", csPort);
+            }
+        });
+
+
+        socket.on("sys", (s)=>{
+            if(s.gsConnected){
+                document.getElementById("gs_status_ui").innerHTML = "CONNECTED";
+                document.getElementById("cGS").innerHTML = "DISCONNECT";
+                $("#cGS").removeClass("btn-outline-success");
+                $("#cGS").addClass("btn-outline-danger");
+                $("#status_station").css("background-color", "#1e8e3e");
+            }else{
+                document.getElementById("gs_status_ui").innerHTML = "DISCONNECTED";
+                document.getElementById("cGS").innerHTML = "CONNECT";
+                $("#cGS").removeClass("btn-outline-danger");
+                $("#cGS").addClass("btn-outline-success");
+                $("#status_station").css("background-color", "#F00");
+            }
+
+
+
+
+            sys = s;
+        });
+
+        socket.on("rpkt", (rawPacket)=>{
+            updateData(rawPacket);
+        });
+
+        socket.on("plds", (plds)=>{
+            if(plds.length == 0){
+                document.getElementById("selectCubeSat").innerHTML = `<option selected>None Detected...</option>`;
+                $("#status_payload").css("background-color", "#F00");
+                return;
+            }
+            document.getElementById("selectCubeSat").innerHTML = "";
+            if(plds.length == 1){
+                document.getElementById("selectCubeSat").innerHTML += `<option selected value="${plds[0].id}">${plds[0].id}</option>`;
+                $("#status_payload").css("background-color", "#1e8e3e");
+            } else{
+                document.getElementById("selectCubeSat").innerHTML = `<option selected>${plds.length} Detected</option><option disabled></option>`;
+                $("#status_payload").css("background-color", "#1e8e3e");
+                plds.forEach(pl => {
+                    if(!pl.id) return;
+                    document.getElementById("selectCubeSat").innerHTML += `<option value="${pl.id}">${pl.index}</option>`;
+                });
+            }
+        });
+
+
+        socket.on("plPkt", (pl)=>{
+            var sel = document.getElementById("selectCubeSat").value;
+            if(pl.id == sel){
+                // console.log(pl)
+                // Display the data immediately
+                document.getElementById("cs_pos").innerHTML = `${pl.lat}, ${pl.lng}`;
+                document.getElementById("cs_alt").innerHTML = `${pl.alt}`;
+                document.getElementById("cs_spd").innerHTML = `${pl.speed}`;
+                document.getElementById("cs_hdg").innerHTML = `${pl.angle}`;
+                document.getElementById("cs_sats").innerHTML = `${pl.sats}`;
+
+
+                document.getElementById("cs_mcbTemp").innerHTML = `${pl.t1}`;
+                document.getElementById("cs_temp1").innerHTML = `${pl.t2}`;
+                document.getElementById("cs_press1").innerHTML = `${pl.press}`;
+                document.getElementById("cs_rh1").innerHTML = `${pl.rh}`;
+
+                
+                    // Accel Data
+                document.getElementById("cs_ax").innerHTML = `${pl.ax}`;
+                graphTime[0].append(Date.now(), pl.ax);
+                document.getElementById("cs_ay").innerHTML = `${pl.ay}`;
+                graphTime[1].append(Date.now(), pl.ay);
+                document.getElementById("cs_az").innerHTML = `${pl.az}`;
+                graphTime[2].append(Date.now(), pl.az);
+
+                document.getElementById("cs_gx").innerHTML = `${pl.gx}`;
+                graphTime[3].append(Date.now(), pl.gx);
+                document.getElementById("cs_gy").innerHTML = `${pl.gy}`;
+                graphTime[4].append(Date.now(), pl.gy);
+                document.getElementById("cs_gz").innerHTML = `${pl.gz}`;
+                graphTime[5].append(Date.now(), pl.gz);
+
+                document.getElementById("cs_mx").innerHTML = `${pl.mx}`;
+                graphTime[6].append(Date.now(), pl.mx);
+                document.getElementById("cs_my").innerHTML = `${pl.my}`;
+                graphTime[7].append(Date.now(), pl.my);
+                document.getElementById("cs_mz").innerHTML = `${pl.mz}`;
+                graphTime[8].append(Date.now(), pl.mz);
+
+
+                if(pl.lat && pl.lng){
+                    // update map
+                    csMarker.position = { lat: pl.lat, lng: pl.lng };
+                    map.setCenter({lat: pl.lat, lng: pl.lng})
+                    // map.setZoom(8)
+                }
+
+                if(pl.bms_ch1){
+                    $("#bms_ch1").removeClass("btn-outline-danger");
+                    $("#bms_ch1").addClass("btn-outline-success");
+                }else{
+                    $("#bms_ch1").addClass("btn-outline-danger");
+                    $("#bms_ch1").removeClass("btn-outline-success");   
+                }
+                if (pl.bms_ch2) {
+                    $("#bms_ch2").removeClass("btn-outline-danger");
+                    $("#bms_ch2").addClass("btn-outline-success");
+                } else {
+                    $("#bms_ch2").addClass("btn-outline-danger");
+                    $("#bms_ch2").removeClass("btn-outline-success");
+                }
+                if (pl.bms_ch3) {
+                    $("#bms_ch3").removeClass("btn-outline-danger");
+                    $("#bms_ch3").addClass("btn-outline-success");
+                } else {
+                    $("#bms_ch3").addClass("btn-outline-danger");
+                    $("#bms_ch3").removeClass("btn-outline-success");
+                }
+                if (pl.bms_ch4) {
+                    $("#bms_ch4").removeClass("btn-outline-danger");
+                    $("#bms_ch4").addClass("btn-outline-success");
+                } else {
+                    $("#bms_ch4").addClass("btn-outline-danger");
+                    $("#bms_ch4").removeClass("btn-outline-success");
+                }
+
+
+
+                // BMS Battery Percentages, Voltages, and States
+                document.getElementById("cs_scv1_v_num").innerHTML = `${pl.sol1V*1000}`;
+                document.getElementById("cs_scv2_v_num").innerHTML = `${pl.sol2V*1000}`;
+                
+                document.getElementById("cs_sc1_v").innerHTML = `${pl.sol1V*1000}`;
+                $("#cs_sc1_v").css("width", `${(pl.sol1V*10000) / 350}%`);
+                document.getElementById("cs_sc2_v").innerHTML = `${pl.sol2V*1000}`;
+                $("#cs_sc2_v").css("width", `${(pl.sol2V*10000) / 350}%`);
+
+                document.getElementById("cs_bat_v").innerHTML = `${pl.batV}`
+
+
+
+                // Orientation Display
+                o.yaw = pl.yaw;
+                o.pitch = pl.pitch;
+                o.roll = pl.roll;
+
+
+                // ASB Board
+                // document.getElementById("cs_asb_t1").innerHTML = `${pl.asb_t1}`;
+                document.getElementById("cs_temp1").innerHTML = `${pl.asb_t1}`;
+                document.getElementById("cs_asb_t2").innerHTML = `${pl.asb_t2}`;
+                document.getElementById("cs_asb_rh").innerHTML = `${pl.asb_rh}`;
+                // document.getElementById("cs_asb_p1").innerHTML = `${pl.asb_p1}`;
+                document.getElementById("cs_press1").innerHTML = `${pl.asb_p1}`;
+                document.getElementById("cs_asb_pa1").innerHTML = `${pl.asb_pa1}`;
+                document.getElementById("cs_asb_aqi").innerHTML = `${pl.asb_aqi}`;
+                document.getElementById("cs_asb_tvoc").innerHTML = `${pl.asb_tvoc}`;
+                document.getElementById("cs_asb_eco2").innerHTML = `${pl.asb_eco2}`;
+                document.getElementById("cs_asb_co2").innerHTML = `${pl.asb_co2}`;
+
+
+                updatePM2Chart([pl.asb_mc10, pl.asb_mc25, pl.asb_mc40, pl.asb_mc100,
+                                pl.asb_nc05, pl.asb_nc10, pl.asb_nc25, pl.asb_nc40, 
+                                pl.asb_nc100]);
+
+                
+                
+                
+
+            
+
+
+                
+                
+            
+
+            }
+        })
+
+
+        $("#bms_ch1").on("click", ()=>{
+            var id = document.getElementById("selectCubeSat").value;
+            socket.emit("toggleBMSCH", {id: id, ch: 1});
+        });
+        $("#bms_ch2").on("click", ()=>{
+            var id = document.getElementById("selectCubeSat").value;
+            socket.emit("toggleBMSCH", { id: id, ch: 2 });
+        });
+        $("#bms_ch3").on("click", () => {
+            var id = document.getElementById("selectCubeSat").value;
+            socket.emit("toggleBMSCH", { id: id, ch: 3 });
+        });
+        $("#bms_ch4").on("click", () => {
+            var id = document.getElementById("selectCubeSat").value;
+            socket.emit("toggleBMSCH", { id: id, ch: 4 });
+        });
+        
+        
+
+
+
+
+
+
+        const RAW_LENGTH = 2000; // Characters
+
+
+        function updateData(csvData) {
+            var timestamp = new Date().toLocaleString('en-US', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            var newData = "<c1>" + timestamp + "</c1> | " + csvData;
+            var cc = document.getElementById('rawPackets').innerHTML;
+            document.getElementById('rawPackets').innerHTML = newData + "<br>" + cc.substring(0, RAW_LENGTH);
+            // document.getElementById('rawPackets').scrollTop = 0;
+        }
+
+
+
+
+        
+
+
+
+
+
+
+        window.onscroll = function () { 
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100)  document.getElementById("tb").style.display = 'block';
+            else document.getElementById("tb").style.display = 'none';
+        };
+
+
+    </script>
+
+
+
+    <script>
+        // Charts stuff
+
+        var graphTime = [];
+        var graphs = [];
+        const cols = [
+                "#FF5733", // Red-Orange
+                "#FFD700", // Gold
+                "#FF6347", // Tomato
+                "#FF4500", // Orange-Red
+                "#FF8C00", // Dark Orange
+                "#FFA07A", // Light Salmon
+                "#FF69B4", // Hot Pink
+                "#FF1493", // Deep Pink
+                "#FF00FF", // Magenta
+                "#FF00FF", // Fuchsia
+            ];
+
+
+        for(var i=0; i<9; i++){
+            createTimeline(i);
+            // console.log(graphTime);
+        }
+
+
+
+
+        function createTimeline(index) {
+            if(index < 3){
+                var chart = new SmoothieChart({ tooltipLine: { strokeStyle: '#bbbbbb' }, responsive: true, tooltip: true, maxValue: 25, minValue: -25, maxValueScale: 1.25, minValueScale: 1.25 });
+            } else if(index < 6 && index > 3){
+                var chart = new SmoothieChart({ tooltipLine: { strokeStyle: '#bbbbbb' }, responsive: true, tooltip: true, maxValue: 5000, minValue: -5000, maxValueScale: 1.25, minValueScale: 1.25 });
+            } else{
+                var chart = new SmoothieChart({ tooltipLine: { strokeStyle: '#bbbbbb' }, responsive: true, tooltip: true, maxValue: 500, minValue: -500, maxValueScale: 1.25, minValueScale: 1.25 });
+            }
+            var series = new TimeSeries();
+            var canvas = document.getElementById(`g${index+1}`);
+            
+            chart.addTimeSeries(series, { lineWidth: 2, strokeStyle: cols[index], interpolation: 'bezier' });
+            chart.streamTo(canvas, 100);
+
+            graphs[index] = chart;
+            graphTime[index] = series;
+        }
+
+        
+        // setInterval(()=>{
+        //     for(var i=0; i<9; i++){
+        //         var r = Math.random() * 10000;                
+        //         graphTime[i].append(Date.now(), r);
+        //     }
+        // }, 500);
+
+
+
+        var initialData = {
+            labels: ["MC 1.0", "MC 2.5", "MC 4.0",  "MC 10.0", "NC 0.5", "NC 1.0", "NC 2.5", "NC 4.0", "NC 10.0"],
+            datasets: [{
+                label: "MC and NC",
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    
+                ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 99, 132)',
+
+                    'rgb(75, 192, 192)',
+                    'rgb(75, 192, 192)',
+                    'rgb(75, 192, 192)',
+                    'rgb(75, 192, 192)',
+                    'rgb(75, 192, 192)',
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Chart configuration
+        var chartConfig = {
+            type: 'bar',
+            data: initialData,
+            options: {
+                indexAxis: 'y',
+            }
+        };
+        var ctx = document.getElementById('pm2Chart').getContext('2d');
+        var pm2 = new Chart(ctx, chartConfig);
+
+        function updatePM2Chart(newData) {
+            pm2.data.datasets[0].data = newData;
+            pm2.update();
+        }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCsb6jQVjp_fPb6dtMQgB1NIxK5O97FfYM&callback=initMap"></script>
+
+
+</body>
+</html>

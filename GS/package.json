@@ -1,0 +1,43 @@
+{
+  "name": "efcsgtermv1",
+  "version": "1.0.0",
+  "description": "EF CubeSat GTerminal V1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.edgeflyte.csgroundterminal",
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ],
+      "icon": "build/Parachute.png"
+    }
+  },
+  "author": "EdgeFlyte",
+  "license": "ISC",
+  "devDependencies": {
+    "@electron-forge/cli": "^7.2.0",
+    "@electron-forge/maker-deb": "^7.6.0",
+    "@electron-forge/maker-rpm": "^7.6.0",
+    "@electron-forge/maker-squirrel": "^7.2.0",
+    "@electron-forge/maker-zip": "^7.2.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.2.0",
+    "electron": "^27.0.4"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
+    "express": "^4.21.2",
+    "http": "0.0.1-security",
+    "serialport": "^12.0.0",
+    "socket.io": "^4.8.1",
+    "three": "^0.158.0"
+  }
+}
