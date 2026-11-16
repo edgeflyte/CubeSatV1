@@ -1,0 +1,38 @@
+{
+  "schema": "edgeflyte.cubesatv1.telemetry_dictionary/1",
+  "suite_version": "2.1.0",
+  "notes": "Authoritative mnemonics also live in MCB/TelemetryRadio.cpp TELEMETRY_DICTIONARY[]. Combined on-air packs listed under combined_types.",
+  "types": [
+    {"id": "0x0001", "mnemonic": "STATUS", "unit": "", "description": "System status summary"},
+    {"id": "0x0002", "mnemonic": "SERIAL", "unit": "", "description": "Device serial number"},
+    {"id": "0x0003", "mnemonic": "UPTIME", "unit": "s", "description": "Uptime"},
+    {"id": "0x0004", "mnemonic": "BOOTCNT", "unit": "", "description": "Boot count"},
+    {"id": "0x0005", "mnemonic": "MODE", "unit": "", "description": "Operating mode"},
+    {"id": "0x0007", "mnemonic": "VERSION", "unit": "", "description": "Firmware version text"},
+    {"id": "0x0008", "mnemonic": "CMDACK", "unit": "", "description": "Uplink command acknowledgement"},
+    {"id": "0x010F", "mnemonic": "BMSALL", "unit": "", "description": "BMS combined status"},
+    {"id": "0x030F", "mnemonic": "ASBENV", "unit": "", "description": "ASB environmental combined"},
+    {"id": "0x031F", "mnemonic": "ASBPM", "unit": "", "description": "ASB particulate combined"},
+    {"id": "0x0320", "mnemonic": "MCBTEMP", "unit": "C", "description": "MCB temp (+ humidity on wire)"},
+    {"id": "0x041F", "mnemonic": "GPSALL", "unit": "", "description": "GPS combined"},
+    {"id": "0x05FF", "mnemonic": "IMUALL", "unit": "", "description": "IMU combined"},
+    {"id": "0x0900", "mnemonic": "MSGTEXT", "unit": "", "description": "Short mesh / ground-station message"}
+  ],
+  "combined_types": {
+    "0x0001": "mode(u8) flags(u16be) uptime(u32be) boot(u32be)",
+    "0x0008": "cmd(u16be) status(u8) action(u8) parameter(u8) value(u8) msgLen(u8) message(<=13)",
+    "0x010F": "err(u8) ldo(u8) batV(f32be) batPct(f32be) sol1(u16be*100) sol2(u16be*100)",
+    "0x041F": "lat(i32be*1e7) lon(i32be*1e7) alt(f32be) sats(u8) hdop(u8*10) fix(u8)",
+    "0x05FF": "accel(i16be*1000 x3) gyro(i16be*10 x3) mag(i16be*10 x3)",
+    "0x0900": "msgId(u8) fragIdx(u8) fragCount(u8) flags(u8) text[<=16]"
+  },
+  "commands": {
+    "confirm_byte": "0xA5",
+    "confirm_required": ["0x8001", "0x8002", "0x8103"],
+    "radio": {
+      "0x8200": "channel u8 0-125",
+      "0x8201": "pa_level u8 0-3",
+      "0x8204": "fast_interval_ms u16be 100-60000"
+    }
+  }
+}

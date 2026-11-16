@@ -1,0 +1,58 @@
+{
+  "schema": "edgeflyte.cubesatv1.release/2",
+  "suite": "EdgeFlyte CubeSat v1 Firmware",
+  "suite_version": "2.1.0",
+  "codename": "Orbit",
+  "channel": "release",
+  "released": null,
+  "build_date": "2026-10-12",
+  "license": "EdgeFlyte Non-Commercial / Educational License 1.0",
+  "compatibility": "Backwards-compatible with 2.0.x / 1.x radio framing. Adds GS host TX, short messages (0x0900), confirm-gated dangerous commands, and ASB SATBUS id 0/1 acceptance.",
+  "notes": "2.1.0 (Orbit). The ground station checks #1 and #R frames and accepts a host tx command. The flight computer adds short messages and radio channel, power, and interval commands.",
+  "modules": {
+    "mcb": {
+      "name": "Main Control Board",
+      "version": "2.1.0",
+      "version_int": 20100,
+      "mcu": "RP2040",
+      "board": "Raspberry Pi Pico",
+      "path": "MCB",
+      "sketch": "MCB.ino",
+      "artifact": "build/mcb/MCB.ino.uf2",
+      "sha256": "d5956059bdfd5dc883618882fe171e0402085755c06cf7152f69be5b1af5b195"
+    },
+    "bms": {
+      "name": "Battery Management System",
+      "version": "2.1.0",
+      "version_int": 20100,
+      "mcu": "ATmega328PB",
+      "board": "MiniCore ATmega328PB",
+      "path": "BMS",
+      "sketch": "BMS.ino",
+      "artifact": "build/bms/BMS.ino.hex",
+      "sha256": "f52a6ba5892029b0fba292b9fd5f641e839153b5799f2a16cfb02e0e71237b01"
+    },
+    "asb": {
+      "name": "Atmospheric Sensing Board",
+      "version": "2.1.0",
+      "version_int": 20100,
+      "mcu": "ATmega328PB",
+      "board": "MiniCore ATmega328PB",
+      "path": "ASB",
+      "sketch": "ASB.ino",
+      "artifact": null,
+      "sha256": null
+    },
+    "gs": {
+      "name": "Ground Station 8601",
+      "version": "2.1.0",
+      "version_int": 20100,
+      "mcu": "SAMD21",
+      "board": "Adafruit Feather M0",
+      "path": "GS",
+      "sketch": "GS.ino",
+      "artifact": "build/gs/GS.ino.hex",
+      "sha256": "bd102c05c4e418d83e18ad3934ece28fd0fa573467c938bc89c02b1f87752d4c"
+    }
+  }
+}

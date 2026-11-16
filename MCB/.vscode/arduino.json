@@ -1,0 +1,6 @@
+{
+  "sketch": "MCB.ino",
+  "board": "rp2040:rp2040:rpipico",
+  "port": "",
+  "output": "build"
+}
