@@ -1,10 +1,12 @@
+[![EdgeFlyte](https://edgeflyte.com/edgeflyte_logo.png)](https://edgeflyte.com/)
+
 # EdgeFlyte CubeSat v1 — Firmware Suite
 
 **Suite version:** 2.1.0 ("Orbit") · **License:** EdgeFlyte Non-Commercial / Educational 1.0
 
-The EdgeFlyte CubeSat v1 is a modular educational satellite kit. This
-repository is the firmware for every module in the kit, released together
-as version 2.1.0.
+[![1U EDU Classic](https://edgeflyte.com/uploads/1792368887980-Vd6hrxhFj9k.png)](https://edgeflyte.com/products/1001)
+
+Firmware for the [1U EDU Classic](https://edgeflyte.com/products/1001), the EdgeFlyte CubeSat v1 kit. This repository is the firmware for every module in the kit, released together as version 2.1.0.
 
 ## Modules
 
@@ -53,4 +55,4 @@ Source-available under the **EdgeFlyte Non-Commercial / Educational License 1.0*
 — free for personal, educational, and research use. Commercial use requires a
 separate agreement. See [LICENSE](LICENSE).
 
-Store: store.edgeflyte.com/products/cubesat-kit
+[1U EDU Classic](https://edgeflyte.com/products/1001) · [Buy the kit](https://store.edgeflyte.com/products/cubesat-kit) · [Support](https://edgeflyte.com/support)
